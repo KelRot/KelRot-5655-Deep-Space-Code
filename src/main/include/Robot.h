@@ -41,7 +41,7 @@ class Robot : public frc::TimedRobot {
   VictorSPX onAsansor{0};
   VictorSPX arkaAsansor{1};
   
-  void setLiftforHatchAndCargo(bool cargo_top,bool cargo_mid,bool cargo_low,bool hatch_top,bool hatch_mid,bool hatch_low);
+  void setLiftforHatchAndCargo();
   void manualLiftControl(bool up,bool down);
   frc::Encoder asansor_ec{0,1};
   PDController pdc{0.07,0.5};

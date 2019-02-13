@@ -15,24 +15,23 @@ void Robot::manualLiftControl(bool up,bool down)
   if(up)
    ref +=1.25;
   else if(down)
-  {
    ref -=1.25;
-  }
 }
-void Robot::setLiftforHatchAndCargo(bool cargo_top,bool cargo_mid,bool cargo_low,bool hatch_top,bool hatch_mid,bool hatch_low)
+void Robot::setLiftforHatchAndCargo()
 {
   //TODO tam pozisyonlar belirlenmeli
-  if(cargo_top)
+  if(js.GetRawButton(5))//Cargo 3
   ref=162;
-  else if(cargo_mid)
+  else if(js.GetRawButton(6))//Cargo 2
   ref=92;
-  else if(cargo_low)
+  else if(js.GetRawButton(7))//Cargo 1
   ref=20;
-  else if(hatch_top)
+
+  else if(js.GetRawButton(8))//Hatch 3
   ref=5;
-  else if(hatch_mid)
+  else if(js.GetRawButton(9))//Hatch 2
   ref=5;
-  else if(hatch_low)
+  else if(js.GetRawButton(10))//Hatch 1
   ref=5;
 }
 
@@ -61,12 +60,11 @@ void Robot::TeleopInit() {
 }
 
 void Robot::TeleopPeriodic() {
-
-  std::cout<<getLiftHeight()<<std::endl;
+  //? victor spxlerin bırakma sorunu ?
   rd.CurvatureDrive(surus_j.GetRawAxis(1),surus_j.GetRawAxis(4),7);
   manualLiftControl(js.GetRawButton(3),js.GetRawButton(4));
-  setLiftforHatchAndCargo(js.GetRawButton(5),js.GetRawButton(6),js.GetRawButton(7),js.GetRawButton(8),js.GetRawButton(9),js.GetRawButton(10));
-
+  setLiftforHatchAndCargo();
+  
   ref = (js.GetRawAxis(0)-(-1))/(1-(-1)) * (150-30) + 30;
   int error = ref-getLiftHeight();
   pdc.setError(error);

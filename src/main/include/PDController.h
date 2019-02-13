@@ -2,8 +2,7 @@
 #define PDCONTROLLER_H
 
 class PDController{
-    private:
-        
+    private:    
         float error;
         float lastError;
         float kP;
