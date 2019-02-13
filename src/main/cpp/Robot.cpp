@@ -3,62 +3,71 @@
 /* Open Source Software - may be modified and shared by FRC teams. The code   */
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
+/* 2019 Deep Space Robot Code by KelRot #5655                                                                           */
 /*----------------------------------------------------------------------------*/
 #include <Robot.h>
-
+#include <math.h>
 #include <iostream>
-
 #include <frc/smartdashboard/SmartDashboard.h>
 
+void Robot::manualLiftControl(bool up,bool down)
+{
+  if(up)
+   ref +=1.25;
+  else if(down)
+  {
+   ref -=1.25;
+  }
+}
+void Robot::setLiftforHatchAndCargo(bool cargo_top,bool cargo_mid,bool cargo_low,bool hatch_top,bool hatch_mid,bool hatch_low)
+{
+  //TODO tam pozisyonlar belirlenmeli
+  if(cargo_top)
+  ref=162;
+  else if(cargo_mid)
+  ref=92;
+  else if(cargo_low)
+  ref=20;
+  else if(hatch_top)
+  ref=5;
+  else if(hatch_mid)
+  ref=5;
+  else if(hatch_low)
+  ref=5;
+}
+
 float Robot::getLiftHeight(){
-  float ecRotation = (float)ec.Get()/600.0;
+  float ecRotation = (float)asansor_ec.Get()/600.0;
   return ecRotation * 2.0 * 3.14159265 * 1.25 * 3.0*1.15;
 }
-void Robot::RobotInit() {
-  
-}
+void Robot::RobotInit() {}
 
-/**
- * This function is called every robot packet, no matter the mode. Use
- * this for items like diagnostics that you want ran during disabled,
- * autonomous, teleoperated and test.
- *
- * <p> This runs after the mode specific periodic functions, but before
- * LiveWindow and SmartDashboard integrated updating.
- */
 void Robot::RobotPeriodic() {
-  kp=Preferences::GetInstance()->GetFloat("Kp");
-  kd=Preferences::GetInstance()->GetFloat("Kd");
+  kp=frc::Preferences::GetInstance()->GetFloat("Kp");
+  kd=frc::Preferences::GetInstance()->GetFloat("Kd");
 }
 
-/**
- * This autonomous (along with the chooser code above) shows how to select
- * between different autonomous modes using the dashboard. The sendable chooser
- * code works with the Java SmartDashboard. If you prefer the LabVIEW Dashboard,
- * remove all of the chooser code and uncomment the GetString line to get the
- * auto name from the text box below the Gyro.
- *
- * You can add additional auto modes by adding additional comparisons to the
- * if-else structure below with additional strings. If using the SendableChooser
- * make sure to add them to the chooser code above as well.
- */
-void Robot::AutonomousInit() {
-  
-}
-
-void Robot::AutonomousPeriodic() {
-  
-}
+void Robot::AutonomousInit() {}
+void Robot::AutonomousPeriodic() {}
 
 void Robot::TeleopInit() {
-  double baseSpeed = 0.8;
-  ec.Reset();
-  pdc.kP=this->kp;
-  pdc.kD=this->kd;
+  onAsansor.Set(ControlMode::PercentOutput,0);
+  arkaAsansor.Set(ControlMode::PercentOutput,0);
+  baseSpeed = 1;
+  asansor_ec.Reset();
+  pdc.setkP(this->kp);
+  pdc.setkD(this->kd);
+  ref = 5;
 }
 
 void Robot::TeleopPeriodic() {
-  int ref = 60;
+
+  std::cout<<getLiftHeight()<<std::endl;
+  rd.CurvatureDrive(surus_j.GetRawAxis(1),surus_j.GetRawAxis(4),7);
+  manualLiftControl(js.GetRawButton(3),js.GetRawButton(4));
+  setLiftforHatchAndCargo(js.GetRawButton(5),js.GetRawButton(6),js.GetRawButton(7),js.GetRawButton(8),js.GetRawButton(9),js.GetRawButton(10));
+
+  ref = (js.GetRawAxis(0)-(-1))/(1-(-1)) * (150-30) + 30;
   int error = ref-getLiftHeight();
   pdc.setError(error);
   float output = pdc.getOutput();
@@ -69,13 +78,13 @@ void Robot::TeleopPeriodic() {
   }
   if(baseSpeed<-1){
     baseSpeed = -1;
-  }
+  } 
   double speed = baseSpeed;
   onAsansor.Set(ControlMode::PercentOutput,speed);
   arkaAsansor.Set(ControlMode::PercentOutput,speed);
-  std::cout<<getLiftHeight()<<std::endl;
-  std::cout<<error<<std::endl;
 
+  std::cout<<getLiftHeight()<<std::endl;
+  std::cout<<"error="<<error<<std::endl;
 }
 
 void Robot::TestPeriodic() {}

@@ -6,14 +6,15 @@ class PDController{
         
         float error;
         float lastError;
-
+        float kP;
+        float kD;
     public:
         PDController(float kP, float kD);
         PDController();
+        void setkP(float kP);
+        void setkD(float kD);
         void setError(float error);
         float getOutput();
-        float kP;
-        float kD;
-        
+       
 };
 #endif

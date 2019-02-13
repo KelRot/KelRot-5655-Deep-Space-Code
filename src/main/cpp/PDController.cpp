@@ -14,5 +14,13 @@ float PDController::getOutput(){
     this->lastError = this->error;
     return output;
 }
+void PDController::setkP(float kP)
+{
+  this->kP=kP;
+}
+void PDController::setkD(float kD)
+{
+   this->kD=kD;
+}
 
 

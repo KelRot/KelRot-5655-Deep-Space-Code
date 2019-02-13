@@ -6,15 +6,16 @@
 /*----------------------------------------------------------------------------*/
 
 #pragma once
-
 #include <string>
+#include <frc/WPILib.h>
 #include "ctre/Phoenix.h"
 #include <frc/TimedRobot.h>
-#include  "Encoder.h"
-#include <PDController.h>
 #include <frc/smartdashboard/SendableChooser.h>
 #include <frc/Preferences.h>
-using namespace frc;
+#include <frc/Encoder.h>
+#include "PDController.h"
+#include <frc/MotorSafety.h>
+
 class Robot : public frc::TimedRobot {
  public:
   void RobotInit() override;
@@ -27,14 +28,27 @@ class Robot : public frc::TimedRobot {
   float getLiftHeight();
   double baseSpeed;
   float kp,kd;
-
+  
  private:
+  int ref;
   frc::SendableChooser<std::string> m_chooser;
   const std::string kAutoNameDefault = "Default";
   const std::string kAutoNameCustom = "My Auto";
   std::string m_autoSelected;
+
+  frc::Joystick js{1};
+  frc::Joystick surus_j{0};
   VictorSPX onAsansor{0};
   VictorSPX arkaAsansor{1};
-  Encoder ec{0,1};
+  
+  void setLiftforHatchAndCargo(bool cargo_top,bool cargo_mid,bool cargo_low,bool hatch_top,bool hatch_mid,bool hatch_low);
+  void manualLiftControl(bool up,bool down);
+  frc::Encoder asansor_ec{0,1};
   PDController pdc{0.07,0.5};
+  frc::Talon sagOn{8};
+  frc::Talon sagArka{8};
+  frc::Talon solOn{6};
+  frc::Talon solArka{7};
+  frc::SpeedControllerGroup sag{sagOn,sagArka}; frc::SpeedControllerGroup sol{solOn,solArka};
+  frc::DifferentialDrive rd{sag,sol};
 };
