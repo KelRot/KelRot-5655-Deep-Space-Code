@@ -18,20 +18,20 @@ void Robot::manualLiftControl(bool up,bool down)
    ref -=1.25;
 }
 void Robot::setLiftforHatchAndCargo()
-{
+{ 
   //TODO tam pozisyonlar belirlenmeli
-  if(js.GetRawButton(5))//Cargo 3
+  if(js.GetRawButtonPressed(5))//Cargo 3
   ref=162;
-  else if(js.GetRawButton(6))//Cargo 2
+  else if(js.GetRawButtonPressed(6))//Cargo 2
   ref=92;
-  else if(js.GetRawButton(7))//Cargo 1
+  else if(js.GetRawButtonPressed(7))//Cargo 1
   ref=20;
 
-  else if(js.GetRawButton(8))//Hatch 3
+  else if(js.GetRawButtonPressed(8))//Hatch 3
   ref=5;
-  else if(js.GetRawButton(9))//Hatch 2
+  else if(js.GetRawButtonPressed(9))//Hatch 2
   ref=5;
-  else if(js.GetRawButton(10))//Hatch 1
+  else if(js.GetRawButtonPressed(10))//Hatch 1
   ref=5;
 }
 
