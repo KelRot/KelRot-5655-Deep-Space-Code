@@ -26,11 +26,8 @@ class Robot : public frc::TimedRobot {
   void TeleopPeriodic() override;
   void TestPeriodic() override;
   float getLiftHeight();
-  double baseSpeed;
-  float kp,kd;
-  
+
  private:
-  int ref;
   frc::SendableChooser<std::string> m_chooser;
   const std::string kAutoNameDefault = "Default";
   const std::string kAutoNameCustom = "My Auto";
@@ -38,17 +35,26 @@ class Robot : public frc::TimedRobot {
 
   frc::Joystick js{1};
   frc::Joystick surus_j{0};
+
   VictorSPX onAsansor{0};
   VictorSPX arkaAsansor{1};
   
+  int ref;
+  double baseSpeed;
+  float kp,kd;
+  
   void setLiftforHatchAndCargo();
-  void manualLiftControl(bool up,bool down);
+  void manualLiftControl();
+
   frc::Encoder asansor_ec{0,1};
   PDController pdc{0.07,0.5};
+  frc::Timer timer;
+
   frc::Talon sagOn{8};
   frc::Talon sagArka{8};
   frc::Talon solOn{6};
   frc::Talon solArka{7};
+  
   frc::SpeedControllerGroup sag{sagOn,sagArka}; frc::SpeedControllerGroup sol{solOn,solArka};
   frc::DifferentialDrive rd{sag,sol};
 };
