@@ -38,23 +38,35 @@ class Robot : public frc::TimedRobot {
 
   VictorSPX onAsansor{0};
   VictorSPX arkaAsansor{1};
-  
+  frc::Victor intakeSol{0};
+  frc::Victor intakeSag{1};
+
   int ref;
   double baseSpeed;
   float kp,kd;
   
   void setLiftforHatchAndCargo();
   void manualLiftControl();
-
+  void intake();
+  void hatchStuff();
+  void extension();
+  int vision_proc();
+  
   frc::Encoder asansor_ec{0,1};
   PDController pdc{0.07,0.5};
   frc::Timer timer;
 
-  frc::Talon sagOn{8};
-  frc::Talon sagArka{8};
-  frc::Talon solOn{6};
-  frc::Talon solArka{7};
+  frc::DoubleSolenoid intakeIndirme{4,5};
+  frc::DoubleSolenoid hatchAtis{6,7};
+  frc::Compressor comp{};
+
+  frc::Talon sagOn{2};
+  frc::Talon sagArka{3};
+  frc::Talon solOn{4};
+  frc::Talon solArka{4};
   
   frc::SpeedControllerGroup sag{sagOn,sagArka}; frc::SpeedControllerGroup sol{solOn,solArka};
   frc::DifferentialDrive rd{sag,sol};
+
+  cs::UsbCamera kamera;
 };
