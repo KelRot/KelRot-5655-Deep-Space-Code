@@ -6,18 +6,26 @@
 /* 2019 Deep Space Robot Code by KelRot #5655                                                                           */
 /*----------------------------------------------------------------------------*/
 #include <Robot.h>
-#include <image_proc.h>
 #include <math.h>
 #include <iostream>
 #include <frc/smartdashboard/SmartDashboard.h>
-int Robot::vision_proc()
+
+std::vector<float> Robot::vision_proc()
 {
-  float dist_left=initialProcess()[0]; float dist_right=initialProcess()[1];
-  float targetMiddleOffset=initialProcess()[2];
+  cvSink.GrabFrame(frame);
+  std::vector<float> values=initialProcess(frame);
+  float dist_left=values[0]; float dist_right=values[1];
+  float targetMiddleOffset = values[2];
   float angle=getAngle(dist_left,dist_right);
   float radius=calculateRadius((dist_left + dist_right) / 2 - CAM_INTAKE_DIST, angle, targetMiddleOffset);//radius = 
   
+  std::vector<float> retVector;
+  retVector.push_back(dist_left);
+  retVector.push_back(dist_right);
+  retVector.push_back(radius);
+  return retVector;
 }
+
 void Robot::intake()
 {
   if(js.GetPOV()==180)
@@ -44,6 +52,7 @@ void Robot::manualLiftControl()
   else if(js.GetRawButton(4))//*aşağı
    ref -=1.25;
 }
+
 void Robot::setLiftforHatchAndCargo()
 {
   //TODO tam pozisyonlar belirlenmeli
@@ -62,6 +71,7 @@ void Robot::setLiftforHatchAndCargo()
   else if(js.GetRawButtonPressed(10))//*Hatch 1
     ref=32;
 }
+
 void Robot::hatchStuff()
 {
   if(js.GetRawButtonPressed(11))
@@ -80,6 +90,7 @@ void Robot::hatchStuff()
   }
 
 }
+
 float Robot::getLiftHeight(){
   float ecRotation = (float)asansor_ec.Get()/600.0;
   return ecRotation * 2.0 * 3.14159265 * 1.25 * 3.0*1.15;
@@ -96,25 +107,17 @@ void Robot::extension(){
 
 
 void Robot::RobotInit() {
-  
   kamera=frc::CameraServer::GetInstance()->StartAutomaticCapture();
-  frc::CameraServer::GetInstance()->GetVideo(kamera); 
+  cvSink=frc::CameraServer::GetInstance()->GetVideo(kamera); 
 }
 
 void Robot::RobotPeriodic() {
   kp=frc::Preferences::GetInstance()->GetFloat("Kp");
   kd=frc::Preferences::GetInstance()->GetFloat("Kd");
+  auto_kP=frc::Preferences::GetInstance()->GetFloat("Auto Kp");
 }
 
 void Robot::AutonomousInit() {
-  timer.Start();
-}
-void Robot::AutonomousPeriodic() {
-  if(timer.Get()<3.00)
-   std::cout<<"My battery is low and it is getting dark."<<std::endl; //* F
-}
-
-void Robot::TeleopInit() {
   onAsansor.Set(ControlMode::PercentOutput,0);
   arkaAsansor.Set(ControlMode::PercentOutput,0);
 
@@ -124,18 +127,78 @@ void Robot::TeleopInit() {
   pdc.setkP(this->kp);
   pdc.setkD(this->kd);
   ref = 0;
+
+  runPControl = false;
+}
+void Robot::AutonomousPeriodic() {
+  TeleopPeriodic();
+}
+
+void Robot::TeleopInit() {
+ 
 }
 
 void Robot::TeleopPeriodic() {
-  rd.CurvatureDrive(surus_j.GetRawAxis(1),surus_j.GetRawAxis(4)*0.75,7);
+  
   manualLiftControl();
   setLiftforHatchAndCargo();
   intake();
   hatchStuff();
   extension();
-  if(surus_j.GetRawButtonPressed(6))
+
+  if(surus_j.GetAxis(frc::Joystick::AxisType::kThrottleAxis)<-0.05 || surus_j.GetAxis(frc::Joystick::AxisType::kThrottleAxis)>0.05){
+    runPControl = false;
+  }
+
+  if(surus_j.GetRawButtonPressed(4))
   {
-    comp.Stop();
+    std::vector<float> values= vision_proc();
+    leftDist = values[0];
+    rightDist = values[1];
+    radius = values[2];
+    if(leftDist > rightDist){
+      leftTargetDistance = 2*PI*(radius+32.5);
+      rightTargetDistance = 2*PI*(radius-32.5);
+    }
+    else{
+      rightTargetDistance = 2*PI*(radius+32.5);
+      leftTargetDistance = 2*PI*(radius-32.5);
+    }
+    ecDrive_left.Reset();
+    ecDrive_right.Reset();
+    runPControl = true;
+  }
+
+  if(runPControl){
+    if(leftTargetDistance > rightTargetDistance){
+      float current = ecDrive_left.Get()/1024*48;
+      float leftSet = (leftTargetDistance-current)*auto_kP;
+      if(leftSet > 1){
+        leftSet = 1;
+      }
+      float rightSet = rightTargetDistance/leftTargetDistance * leftSet;
+      
+      solOn.Set(leftSet);
+      solArka.Set(leftSet);
+      sagOn.Set(rightSet*-1.0);
+      sagArka.Set(rightSet*-1.0);
+    }
+    if(rightTargetDistance > leftTargetDistance){
+      float current = ecDrive_right.Get()/1024*48;
+      float rightSet = (rightTargetDistance-current)*auto_kP;
+      if(rightSet > 1){
+        rightSet = 1;
+      }
+      float leftSet = leftTargetDistance/rightTargetDistance * rightSet;
+      
+      solOn.Set(leftSet);
+      solArka.Set(leftSet);
+      sagOn.Set(rightSet*-1.0);
+      sagArka.Set(rightSet*-1.0);
+    }
+  }
+  else{
+    rd.CurvatureDrive(surus_j.GetRawAxis(1),surus_j.GetRawAxis(4)*0.75,7);
   }
   float error = ref-getLiftHeight();
   pdc.setError(error);

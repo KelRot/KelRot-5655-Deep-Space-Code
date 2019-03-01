@@ -31,18 +31,16 @@ float calculateRadius(float h,float angle,float x) {
 
 }
 
-std::vector<float> initialProcess()//returns dist_left,dist_right,targetMiddleOffset respectively in a vector
+std::vector<float> initialProcess(cv::Mat frame)//returns dist_left,dist_right,targetMiddleOffset respectively in a vector
 { 
 	int h = 41, s = 231, v = 41;
 	int h_to=59,s_to = 255, v_to = 255;
 
-	cv::VideoCapture cam(0);
-	cam.set(cv::CAP_PROP_EXPOSURE, -13);
 	cv::Mat original,hsv,thresh;
 
-    cam >> original;
+    original=frame;
     //GaussianBlur(original, hsv, Size(5, 5), 2, 2);
-    cvtColor(original, hsv, cv::COLOR_RGB2HSV);
+    cvtColor(original, hsv, cv::COLOR_BGR2HSV);
     inRange(hsv, cv::Scalar(h, s, v), cv::Scalar(h_to,s_to,v_to), thresh);
     cv::Mat kernel = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(5, 5));
     morphologyEx(thresh, thresh,cv::MORPH_OPEN, kernel);
@@ -61,14 +59,14 @@ std::vector<float> initialProcess()//returns dist_left,dist_right,targetMiddleOf
     float dist_right=0, dist_left=0, angle=0, targetMiddleOffset=0, radius=0;
     if(minRects.size()>1)
     {
-    cv::RotatedRect leftRect = minRects[0];
-    cv::RotatedRect rightRect = minRects[1];
-    dist_left = getDistance(leftRect);
-    dist_right = getDistance(rightRect);
-    targetMiddleOffset = getHorizontalDistance(leftRect, rightRect, dist_left, dist_right, hsv.cols / 2);
-    left_right_targetMiddleOffset.push_back(dist_left);
-    left_right_targetMiddleOffset.push_back(dist_right);
-    left_right_targetMiddleOffset.push_back(targetMiddleOffset);
+        cv::RotatedRect leftRect = minRects[0];
+        cv::RotatedRect rightRect = minRects[1];
+        dist_left = getDistance(leftRect);
+        dist_right = getDistance(rightRect);
+        targetMiddleOffset = getHorizontalDistance(leftRect, rightRect, dist_left, dist_right, hsv.cols / 2);
+        left_right_targetMiddleOffset.push_back(dist_left);
+        left_right_targetMiddleOffset.push_back(dist_right);
+        left_right_targetMiddleOffset.push_back(targetMiddleOffset);
     }
     return  left_right_targetMiddleOffset;
 }

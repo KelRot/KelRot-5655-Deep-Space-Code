@@ -15,6 +15,7 @@
 #include <frc/Encoder.h>
 #include "PDController.h"
 #include <frc/MotorSafety.h>
+#include <image_proc.h>
 
 class Robot : public frc::TimedRobot {
  public:
@@ -50,9 +51,11 @@ class Robot : public frc::TimedRobot {
   void intake();
   void hatchStuff();
   void extension();
-  int vision_proc();
-  
+  std::vector<float> vision_proc();
+
   frc::Encoder asansor_ec{0,1};
+  frc::Encoder ecDrive_left{NULL,NULL};//todo bağlanınca girilmesi gerek
+  frc::Encoder ecDrive_right{NULL,NULL};
   PDController pdc{0.07,0.5};
   frc::Timer timer;
 
@@ -69,4 +72,13 @@ class Robot : public frc::TimedRobot {
   frc::DifferentialDrive rd{sag,sol};
 
   cs::UsbCamera kamera;
+  cs::CvSink cvSink;
+  cv::Mat frame;
+  float leftDist;
+  float rightDist;
+  float radius;
+  float auto_kP;
+  float leftTargetDistance;
+  float rightTargetDistance;
+  bool runPControl;
 };
