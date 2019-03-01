@@ -23,6 +23,7 @@ std::vector<float> Robot::vision_proc()
   retVector.push_back(dist_left);
   retVector.push_back(dist_right);
   retVector.push_back(radius);
+  retVector.push_back(angle);
   return retVector;
 }
 
@@ -156,13 +157,14 @@ void Robot::TeleopPeriodic() {
     leftDist = values[0];
     rightDist = values[1];
     radius = values[2];
+    angle = values[3];
     if(leftDist > rightDist){
-      leftTargetDistance = 2*PI*(radius+32.5);
-      rightTargetDistance = 2*PI*(radius-32.5);
+      leftTargetDistance = angle*(radius+32.5);
+      rightTargetDistance = angle*(radius-32.5);
     }
     else{
-      rightTargetDistance = 2*PI*(radius+32.5);
-      leftTargetDistance = 2*PI*(radius-32.5);
+      rightTargetDistance = angle*(radius+32.5);
+      leftTargetDistance = angle*(radius-32.5);
     }
     ecDrive_left.Reset();
     ecDrive_right.Reset();

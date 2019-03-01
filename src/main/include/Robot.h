@@ -77,6 +77,7 @@ class Robot : public frc::TimedRobot {
   float leftDist;
   float rightDist;
   float radius;
+  float angle;
   float auto_kP;
   float leftTargetDistance;
   float rightTargetDistance;
