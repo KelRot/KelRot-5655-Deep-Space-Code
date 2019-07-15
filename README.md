@@ -13,7 +13,6 @@ Kelrot #5655 takımının [FRC](https://www.firstinspires.org/robotics/frc) 2019
  [Chief Delphi - FRC ile ilgili çoğu sorunuza cevap bulabileceğiniz forum](https://www.chiefdelphi.com) \
  [The Blue Alliance - Takımlar ve etkinlikler hakkında bilgi edinebileceğiniz internet sitesi](https://www.thebluealliance.com/) \
  [FRC resmi Discord grubu](https://discordapp.com/invite/frc)
- [text](https://link)
 # Robot ve oyun hakkında
 Oyunu, görevleri, stratejiyi anlatma ve sistemlere ön bir bakış
 # Elektronik sistem
