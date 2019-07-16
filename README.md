@@ -11,7 +11,7 @@
 - [Intake Hatch Asma Sistemi](#intake-cargo-alma-sistemi) 
 
 [Ekstra Kontrol Sistemleri](#ekstra-sistemleri) \
-[Kapanış ve Teşekkür](#kapanış---teşekkür) 
+[Kapanış ve Teşekkür](#kapanış-ve-teşekkür) 
 
 Kelrot #5655 takımının [FRC](https://www.firstinspires.org/robotics/frc) 2019 Deep Space yarışması için hazırladığı robotun kodlarıdır.FIRST tarafından önerildiği üzere Visual Studio Code IDE'si ile birlikte WPIlib eklentisi kullanılarak ve C++ dili tercih edilerek yazıldı. Geliştirme ekosistemin kurulumu hakkında detaylı bilgi [burada](https://wpilib.screenstepslive.com/s/currentCS/m/cpp/c/57252) bulunabilir.
  Ek olarak C++ kullanılarak robot kodu hazırlama ile ilgili  detaylı bilgi [FRC C++ Programming](https://wpilib.screenstepslive.com/s/currentCS/m/cpp) sayfasında bulunabilir.
@@ -130,4 +130,4 @@ Düz piston çalıştırma
 Joystick hazırlama - esadın repoya link ver. \
 Otonom çalışması ve fikri.
 
-# Kapanış-Teşekkür
+# Kapanış ve Teşekkür
