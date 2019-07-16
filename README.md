@@ -3,9 +3,11 @@
 [Robot ve oyun hakkında](#robot-ve-oyun-hakkında) \
 [Elektronik sistem](#elektronik-sistem) \
 [Robot ve oyun hakkında](#robot-ve-oyun-hakkında)
-[Sistemler](#sistemler) \
-- [Sürüş sistemi](#sürüş-sistemi) \ i
-
+[Sistemler](#sistemler) 
+- [Sürüş Sistemi](#sürüş-sistemi) 
+- [Asansör Sistemi](#asansör-sistemi) 
+- [Intake Açılıp Kapanma Sistemi](#asansör-sistemi) 
+- [Intake Cargo Alma Sistemi](#intake-cargo-alma-sistemi) ak-
 Kelrot #5655 takımının [FRC](https://www.firstinspires.org/robotics/frc) 2019 Deep Space yarışması için hazırladığı robotun kodlarıdır.FIRST tarafından önerildiği üzere Visual Studio Code IDE'si ile birlikte WPIlib eklentisi kullanılarak ve C++ dili tercih edilerek yazıldı. Geliştirme ekosistemin kurulumu hakkında detaylı bilgi [burada](https://wpilib.screenstepslive.com/s/currentCS/m/cpp/c/57252) bulunabilir.
  Ek olarak C++ kullanılarak robot kodu hazırlama ile ilgili  detaylı bilgi [FRC C++ Programming](https://wpilib.screenstepslive.com/s/currentCS/m/cpp) sayfasında bulunabilir.
 
@@ -82,11 +84,11 @@ spx ile motor sürme
  rd.CurvatureDrive(drive_js.GetRawAxis(1),drive_js.GetRawAxis(4)*0.75,drive_js.GetRawAxis(7)); 
 ```
 
-- # Asansör
+- # Asansör Sistemi
 PD kontrol,tuning vs
-- # Intake açılıp kapanmama sistemi
+- # Intake Açılıp Kapanmama Sistemi
 Burası çokomelli
-- # Intake cargo alma
+- # Intake Cargo Alma Sistemi
 
 ```cpp
   void intake();
@@ -116,10 +118,10 @@ void Robot::intake()
 ```
 
 Düz motor çalıştırma
-- # Intake hatch asma
+- # Intake Hatch Asma Sistemi
 
 Düz piston çalıştırma
-# Ekstra kontrol sistemleri
+# Ekstra Kontrol Sistemleri
 Joystick hazırlama - esadın repoya link ver. \
 Otonom çalışması ve fikri.
 
