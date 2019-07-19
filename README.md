@@ -6,11 +6,11 @@
 [Sistemler](#sistemler) 
 - [Sürüş Sistemi](#sürüş-sistemi) 
 - [Asansör Sistemi](#asansör-sistemi) 
-- [Intake Açılıp Kapanma Sistemi](#asansör-sistemi) 
+- [Intake Açılıp Kapanma Sistemi](#intake-açılıp-kapanmama-sistemi) 
 - [Intake Cargo Alma Sistemi](#intake-cargo-alma-sistemi)
-- [Intake Hatch Asma Sistemi](#intake-cargo-alma-sistemi) 
+- [Intake Hatch Asma Sistemi](#intake-hatch-asma-sistemi) 
 
-[Ekstra Kontrol Sistemleri](#ekstra-sistemleri) \
+[Ekstra Kontrol Sistemleri](#ekstra-kontrol-sistemleri) \
 [Kapanış ve Teşekkür](#kapanış-ve-teşekkür) 
 
 Kelrot #5655 takımının [FRC](https://www.firstinspires.org/robotics/frc) 2019 Deep Space yarışması için hazırladığı robotun kodlarıdır.FIRST tarafından önerildiği üzere Visual Studio Code IDE'si ile birlikte WPIlib eklentisi kullanılarak ve C++ dili tercih edilerek yazıldı. Geliştirme ekosistemin kurulumu hakkında detaylı bilgi [burada](https://wpilib.screenstepslive.com/s/currentCS/m/cpp/c/57252) bulunabilir.
@@ -34,28 +34,29 @@ Robot, FRC'de her sene olduğu gibi yaklaşık 2.5 dakikalık bir oyunu oynayaca
 [Oyunun kısa tanıtım videosu](https://www.youtube.com/watch?v=Mew6G_og-PI) \
 [Daha detaylı bilgi için kaynak merkezi](https://www.firstinspires.org/resource-library/frc/competition-manual-qa-system)
 
-Kısa şekilde anlatmak gerekirse robotun [Cascade](https://www.instructables.com/id/Introduction-to-Manipulators/#step3)???düzeltme pls  tipinde bir asansör ile taşınan ve cargo ile hatch taşıyıp yerleştiren bir intake sistemine sahip olacak şekilde yapılmasına takımca karar verildi. Oyunun sonundaki göreve hitaben ise bir sistem yapılmadı.
+Kısa şekilde anlatmak gerekirse robotun [Cascade](https://www.instructables.com/id/Introduction-to-Manipulators/)???düzeltme pls  tipinde bir asansör ile taşınan ve cargo ile hatch taşıyıp yerleştiren bir intake sistemine sahip olacak şekilde yapılmasına takımca karar verildi. Oyunun sonundaki tırmanma görevine hitaben ise bir sistem yapılmadı.
 
 ! Robot renderı hoş olur.
 # Elektronik sistem
 [FRC elektroniğine](https://wpilib.screenstepslive.com/s/currentCS/m/getting_started/l/599672-frc-control-system-hardware-overview) ve  [nasıl bağlanacağına](https://wpilib.screenstepslive.com/s/currentCS/m/getting_started/l/599673-wiring-the-frc-control-system) linklerden ulaşabilirsiniz. Ayrıca  [takım 3128](http://team3128.org/) tarafından hazırlanan elektronik FRC Control System Layout'a da [buradan](https://www.chiefdelphi.com/t/pic-upgraded-frc-control-system-wiring-diagram/1665280) ulaşabilirsiniz.
 
-FRC standartlarına uygun olarak hazırladığımız robot elektroniğinde tercihe bağlı olan bölümlerden bahsedecek olursak; \
+FRC standartlarına uygun olarak hazırladığımız robot elektroniğinde tercihe bağlı olan bölümlerden bahsedecek olursak; 
+
 RoboRIO'ya CAN aracılığı ile bağlı: \
-Asansör motorlarının kontrolü için 2 adet Victor SPX 
+Asansör motorlarının kontrolü için 2 adet [Victor SPX](http://www.ctr-electronics.com/victor-spx.html)  
 
 RoboRIO'ya PWM aracılığı ile bağlı: \
-Sürüş motorlarının kontrolü için 4 adet Talon SR, \
-Intake'in cargo almasına yarayan motorlar için 2 adet Victor SP
+Sürüş motorlarının kontrolü için 4 adet Talon SR [Talon SR](http://www.andymark.com/Talon-p/am-talon-discontinued.html), \
+Intake'in cargo almasına yarayan motorlar için 2 adet [Victor SP](https://www.ctr-electronics.com/downloads/pdf/Victor-SP-Quick-Start-Guide.pdf)
 
 roboRIO'ya Digital I/O portlarında bağlanan sensörler:\
-Sürüş kontrolü için gearboxlara yerleştirilen 2 adet SRX Magnetic Encoder
+Sürüş kontrolü için gearboxlara yerleştirilen 2 adet [SRX Magnetic Encoder](http://www.ctr-electronics.com/srx-magnetic-encoder.html)
 
 PCM'e bağlı: \
-Hatch yapıştırmak için pistonu kontrol eden 1 adet Double Solenoid \
-Intake'i aşağıda tutmak için 2 pistonu kontrol eden 1 adet Double Solenoid 
+Hatch yapıştırmak için pistonu kontrol eden 1 adet [Double Solenoid](https://www.andymark.com/products/double-solenoid-valve-mead-1-8-npt) \
+Intake'i aşağıda tutmak için 2 pistonu kontrol eden 1 adet [Double Solenoid](https://www.andymark.com/products/double-solenoid-valve-mead-1-8-npt) 
 
-Robottaki CAN yolu PDB-RoboRIO-Victor SPX'ler-PCM şeklinde bağlanmıştır. PCM ve PDB ile roboRIO iletişimi kütüphanelerde varsayılan olarak [CAN bus](https://wpilib.screenstepslive.com/s/currentCS/m/java/l/599694-using-the-can-subsystem-with-the-roborio) aracılığı ile sağlandığından kod kullanımında herhangi bir sıkıntı yaşanmamaktadır. Ancak iş CAN bus ile bağlanan Victor SPX ve Talon SRX gibi motor sürücülerine geldiğinde WPIlib kütüphanesindeki [SpeedController](https://first.wpi.edu/FRC/roborio/release/docs/cpp/classfrc_1_1SpeedController.html#details) sınıfının PWM ile sinyal vermeyi desteklediğini görüyoruz. CAN bus ile bağlanan bu motor sürücüleri kontrol etmek için Cross The Road Electronics'in kütüphanelerini robot kodu projesine aktarımını sağlamak ve yine aynı firmaya ait Phoenix yazılımı ile CAN aygıtlarının kurulumunu yapmak gerekti.
+Robottaki CAN yolu PDB-RoboRIO-Victor SPX'ler-PCM şeklinde bağlanmıştır. PCM ve PDB ile roboRIO iletişimi kütüphanelerde varsayılan olarak [CAN bus](https://wpilib.screenstepslive.com/s/currentCS/m/java/l/599694-using-the-can-subsystem-with-the-roborio) aracılığı ile sağlandığından kod kullanımında herhangi bir sıkıntı yaşanmamaktadır. Ancak iş CAN bus ile bağlanan Victor SPX ve Talon SRX gibi motor sürücülerine geldiğinde WPIlib kütüphanesindeki [SpeedController](https://first.wpi.edu/FRC/roborio/release/docs/cpp/classfrc_1_1SpeedController.html#details) sınıfının PWM ile sinyal vermeyi desteklediğini görüyoruz. CAN bus ile bağlanan bu motor sürücüleri kontrol etmek için [Cross The Road Electronics](http://www.ctr-electronics.com/)'in kütüphanelerini robot kodu projesine aktarımını sağlamak ve yine aynı firmaya ait Phoenix yazılımı ile CAN aygıtlarının kurulumunu yapmak gerekti.
 
 Kurulum için faydalı linkler: \
 [Phoenix dokümentasyonu ana sayfası](https://phoenix-documentation.readthedocs.io/en/latest/) \
@@ -71,6 +72,8 @@ Kurulumu yaparken biz bu linklerden yararlandık. Daha detaylı bilgiyi dokümen
  Ek olarak PWM ve CAN hakkında bilgi almak için [buradan](https://alex-spataru.gitbooks.io/frc-robot-programming/content/Book/Chapters/1.3.html) hala hazırlanmakta olan bir FRC Programlama rehberinin ilgili bölümünü inceleyebilirsiniz.
 # Sistemler
 joystickten de bahset
+Robot kodu nasıl işliyor.
+
 - # Sürüş sistemi
 Drive alternatifleri için linkler Differential Drive ayrıca wpilib documentation gömülü
 Neden Curvature drive
@@ -90,9 +93,104 @@ spx ile motor sürme
 ```
 
 - # Asansör Sistemi
-PD kontrol,tuning vs
+```cpp
+VictorSPX m_frontLift{0};//CAN 
+VictorSPX m_rearLift{1};
+
+frc::Encoder lift_ec{0,1};
+
+PDController pdc;
+int ref;
+double baseSpeed;
+float kp,kd;
+
+float getLiftHeight();
+void setLiftforHatchAndCargo();
+void manualLiftControl();
+```
+```cpp
+void Robot::manualLiftControl()
+{
+  if(js.GetRawButton(3))//*up
+   ref +=1.25;
+  else if(js.GetRawButton(4))//*down
+   ref -=0.25;
+}
+
+void Robot::setLiftforHatchAndCargo()
+{
+  if(drive_js.GetRawButtonPressed(5)){//*ground level
+    ref = 0;
+  }
+  else if(js.GetRawButtonPressed(5)){//*Cargo level 3
+    ref=220;
+  }
+  else if(js.GetRawButtonPressed(6)){//*Cargo level 2
+    ref=150;
+  }
+  else if(js.GetRawButtonPressed(7)){//*Cargo level 1
+    ref=80;
+  }
+  else if(js.GetRawButtonPressed(8)){//*Hatch level 3
+    ref=188;
+  }
+  else if(js.GetRawButtonPressed(9)){//*Hatch level 2
+    ref=118;
+  }
+  else if(js.GetRawButtonPressed(10)){//*Hatch level 1
+    ref=32;
+  }
+}
+
+float Robot::getLiftHeight(){
+  float ecRotation = (float)lift_ec.Get()/600; 
+  float ilk_katman= ecRotation* 2.0 * 3.14159265 * 1.25;
+  return ilk_katman * 3.0 * 1.15;
+  /* 3.0=cascade sistemi dolayısıyla son katmanın yüksekliği ilk katmanın 
+   üç katı olmalı.
+   1.15=ipin düz sarılmamasından dolayı oluşan kaymayı düzeltmek için.
+  */
+}
+```
+```cpp
+  float error = ref-getLiftHeight();
+  pdc.setError(error);
+  float output = pdc.getOutput();
+  baseSpeed += output;
+  if(baseSpeed >= 1){
+    baseSpeed = 1;
+  }
+  if(baseSpeed<-1){
+    baseSpeed = -1;
+  } 
+  double speed = baseSpeed;
+  m_frontLift.Set(ControlMode::PercentOutput,speed);
+  m_rearLift.Set(ControlMode::PercentOutput,speed);
+
+  std::cout<<"lift height="<<getLiftHeight()<<std::endl;
+  std::cout<<"error="<<error<<std::endl;
+```
+PD kontrol,tuning vs PD kontrol için ayrı repo?
 - # Intake Açılıp Kapanmama Sistemi
 Burası çokomelli
+
+```cpp
+void extension();
+frc::DoubleSolenoid intakeLowering{2,3};
+```
+```cpp
+void Robot::extension(){
+  if(js.GetRawButton(1)){
+    intakeLowering.Set(frc::DoubleSolenoid::Value::kReverse);
+  }
+  else if(js.GetRawButton(2)){
+    intakeLowering.Set(frc::DoubleSolenoid::Value::kForward);
+  }
+  else{
+    intakeLowering.Set(frc::DoubleSolenoid::kOff);
+  }
+}
+```
 - # Intake Cargo Alma Sistemi
 
 ```cpp
@@ -125,6 +223,27 @@ void Robot::intake()
 Düz motor çalıştırma
 - # Intake Hatch Asma Sistemi
 
+```cpp
+void hatchStuff();
+frc::DoubleSolenoid hatchThrow{6,7}; 
+```
+```cpp
+void Robot::hatchStuff()
+{
+  if(js.GetRawButton(12))
+  {
+    hatchThrow.Set(frc::DoubleSolenoid::Value::kForward);
+  }
+  else if(js.GetRawButton(11))
+  {
+    hatchThrow.Set(frc::DoubleSolenoid::Value::kReverse);
+  }
+  else
+  {
+   hatchThrow.Set(frc::DoubleSolenoid::Value::kOff);
+  }
+}
+```
 Düz piston çalıştırma
 # Ekstra Kontrol Sistemleri
 Joystick hazırlama - esadın repoya link ver. \
