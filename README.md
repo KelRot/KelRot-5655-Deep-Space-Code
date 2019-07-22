@@ -88,6 +88,8 @@ FRC oyunlarında hiç değişmeyen bir şey var ise bu da robotların saha düzl
 
 ```cpp
   //Robot.h
+  frc::Joystick drive_js{0};
+
   frc::Talon m_frontRight{2}; //PWM
   frc::Talon m_rearRight{3};
   frc::Talon m_frontLeft{4};
@@ -97,11 +99,21 @@ FRC oyunlarında hiç değişmeyen bir şey var ise bu da robotların saha düzl
   frc::SpeedControllerGroup driveMotors_left{m_frontLeft,m_rearLeft};
   frc::DifferentialDrive rd{driveMotors_left,driveMotors_right};
 ```
-Kodu yazarken de buna uygun olarak `frc::DifferentialDrive`  sınıfını kullandık. Sınıfın kullanımı için [burayı](https://wpilib.screenstepslive.com/s/currentCS/m/java/l/914148-driving-a-robot-using-differential-drive) ziyaret edebilirsiniz. Daha da detaylı açıklama için [WPIlib dokümentasyonunun ilgili sayfasına](https://first.wpi.edu/FRC/roborio/release/docs/cpp/classfrc_1_1DifferentialDrive.html) bakılabilir.
+Kodu yazarken de buna uygun olarak `DifferentialDrive`  sınıfını kullandık. Sınıfın kullanımı için [burayı](https://wpilib.screenstepslive.com/s/currentCS/m/java/l/914148-driving-a-robot-using-differential-drive) ziyaret edebilirsiniz. Daha da detaylı açıklama için [WPIlib dokümentasyonunun ilgili sayfasına](https://first.wpi.edu/FRC/roborio/release/docs/cpp/classfrc_1_1DifferentialDrive.html) bakılabilir.
+
+Motor sürücü olarak Talon SR tercih ettik. Robot ani frenlerde düşebileceği için [coast](https://firstwiki.github.io/wiki/talon-sr#coastbrake) modunu tercih ettik. 
 ```cpp
  //Robot.cpp > Robot::Periodic
  rd.CurvatureDrive(drive_js.GetRawAxis(1),drive_js.GetRawAxis(4)*0.75,drive_js.GetRawAxis(7)); 
 ```
+Yukarıdaki linklerde anlatıldığı üzere sürüş methodunun alternatifleri arasından [CurvatureDrive](https://first.wpi.edu/FRC/roborio/release/docs/cpp/classfrc_1_1DifferentialDrive.html#a7f6af2233e75b79f70faaac79c929e87)'ı seçtik.  Kullanımı linkte olan bu methodu seçmemizde yüksek hızlardaki kontrol kolaylığı ve quickturn butonu ile keskin dönüşler yapabilmesi öne çıktı.
+
+Ayrıca methoda girilen parametreler görüldüğü üzere kumandadan `Joystick` sınıfı kullanılarak veriliyor. Joystick kullanımı ile ilgili aşağıdaki linklerden faydalınabilir.
+[Driver Station hakkında](https://wpilib.screenstepslive.com/s/currentCS/m/24192?data-resolve-url=true&data-manual-id=24192) \
+[Drive Station girdileri](https://wpilib.screenstepslive.com/s/currentCS/m/cpp/l/241880-driver-station-input-overview) \
+[Joystickler](https://wpilib.screenstepslive.com/s/currentCS/m/cpp/l/241881-joysticks)
+
+
 
 - # Asansör Sistemi
 ```cpp
