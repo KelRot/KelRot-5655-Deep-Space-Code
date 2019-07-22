@@ -71,15 +71,24 @@ Kurulumu yaparken biz bu linklerden yararlandık. Daha detaylı bilgiyi dokümen
  
  Ek olarak PWM ve CAN hakkında bilgi almak için [buradan](https://alex-spataru.gitbooks.io/frc-robot-programming/content/Book/Chapters/1.3.html) hala hazırlanmakta olan bir FRC Programlama rehberinin ilgili bölümünü inceleyebilirsiniz.
 # Sistemler
-joystickten de bahset
-Robot kodu nasıl işliyor.
+joystickten de bahset \
+Sistemlere yönelik yazılan kodları teker teker incelemeden önce FRC robot kodunun nasıl işlediğini belirtmek uygun olacaktır.
+
+
+
+
 
 - # Sürüş sistemi
 Drive alternatifleri için linkler Differential Drive ayrıca wpilib documentation gömülü
 Neden Curvature drive
 spx ile motor sürme
+
+FRC oyunlarında hiç değişmeyen bir şey var ise bu da robotların saha düzleminde hareket etmeleridir. Bu hareketi sağlamak için [Kit of Parts](https://www.firstinspires.org/robotics/frc/kit-of-parts) kapsamında olan [AM14U4](https://www.andymark.com/products/am14u4-kit-of-parts-chassis?via=Z2lkOi8vYW5keW1hcmsvV29ya2FyZWE6OkNhdGFsb2c6OkNhdGVnb3J5LzVhZjhkN2Y1YmM2ZjZkNWUzNmYyMzRkOA) kodlu drive base'i kullandık. 
+ Yani Differential Drive sınıfına giren bir sürüş sistemine sahip olduk. [Sürüş sistemleri](https://wpilib.screenstepslive.com/s/currentCS/m/java/l/914814-wpilib-drive-classes-drivetrain-types) ile ilgili detaylı bilgiyi linkte bulabilirsiniz. 
+
 ```cpp
-  frc::Talon m_frontRight{2};
+  //Robot.h
+  frc::Talon m_frontRight{2}; //PWM
   frc::Talon m_rearRight{3};
   frc::Talon m_frontLeft{4};
   frc::Talon m_rearLeft{4};
@@ -88,7 +97,9 @@ spx ile motor sürme
   frc::SpeedControllerGroup driveMotors_left{m_frontLeft,m_rearLeft};
   frc::DifferentialDrive rd{driveMotors_left,driveMotors_right};
 ```
+Kodu yazarken de buna uygun olarak `frc::DifferentialDrive`  sınıfını kullandık. Sınıfın kullanımı için [burayı](https://wpilib.screenstepslive.com/s/currentCS/m/java/l/914148-driving-a-robot-using-differential-drive) ziyaret edebilirsiniz. Daha da detaylı açıklama için [WPIlib dokümentasyonunun ilgili sayfasına](https://first.wpi.edu/FRC/roborio/release/docs/cpp/classfrc_1_1DifferentialDrive.html) bakılabilir.
 ```cpp
+ //Robot.cpp > Robot::Periodic
  rd.CurvatureDrive(drive_js.GetRawAxis(1),drive_js.GetRawAxis(4)*0.75,drive_js.GetRawAxis(7)); 
 ```
 
