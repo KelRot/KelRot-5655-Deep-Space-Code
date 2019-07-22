@@ -108,7 +108,7 @@ Motor sürücü olarak Talon SR tercih ettik. Robot ani frenlerde düşebileceğ
 ```
 Yukarıdaki linklerde anlatıldığı üzere sürüş methodunun alternatifleri arasından [CurvatureDrive](https://first.wpi.edu/FRC/roborio/release/docs/cpp/classfrc_1_1DifferentialDrive.html#a7f6af2233e75b79f70faaac79c929e87)'ı seçtik.  Kullanımı linkte olan bu methodu seçmemizde yüksek hızlardaki kontrol kolaylığı ve quickturn butonu ile keskin dönüşler yapabilmesi öne çıktı.
 
-Ayrıca methoda girilen parametreler görüldüğü üzere kumandadan `Joystick` sınıfı kullanılarak veriliyor. Joystick kullanımı ile ilgili aşağıdaki linklerden faydalınabilir.
+Ayrıca methoda girilen parametreler görüldüğü üzere kumandadan `Joystick` sınıfı kullanılarak veriliyor. Joystick kullanımı ile ilgili aşağıdaki linklerden faydalanılabilir.\
 [Driver Station hakkında](https://wpilib.screenstepslive.com/s/currentCS/m/24192?data-resolve-url=true&data-manual-id=24192) \
 [Drive Station girdileri](https://wpilib.screenstepslive.com/s/currentCS/m/cpp/l/241880-driver-station-input-overview) \
 [Joystickler](https://wpilib.screenstepslive.com/s/currentCS/m/cpp/l/241881-joysticks)
