@@ -71,13 +71,34 @@ Kurulumu yaparken biz bu linklerden yararlandık. Daha detaylı bilgiyi dokümen
  
  Ek olarak PWM ve CAN hakkında bilgi almak için [buradan](https://alex-spataru.gitbooks.io/frc-robot-programming/content/Book/Chapters/1.3.html) hala hazırlanmakta olan bir FRC Programlama rehberinin ilgili bölümünü inceleyebilirsiniz.
 # Sistemler
-joystickten de bahset \
-Sistemlere yönelik yazılan kodları teker teker incelemeden önce FRC robot kodunun nasıl işlediğini belirtmek uygun olacaktır.
+WPIlib'de robot projesi oluşturulduğu zaman verilen robot sınıfı oyunun farklı bölümlerine hitap eden bazı temel methodlar içerir. Bunlardan bazıları(çalışma sırasıyla) :
 
+  `RobotInit()` RoboRIO kodu çalıştırır çalıştırmaz başlayan methoddur ve bir kere çalışır. \
+  `RobotPeriodic() ` RoboRIO kodu çalıştırdığı sürece her 20 ms'de bir çalışır. \
+  `AutonomousInit() ` Robotun oyunun başlangıcındaki otonom bölümü için hazırlanması için bir kere çalışır. \
+  `AutonomousPeriodic() ` Robot otonom bölümündeyken her 20 ms'de bir çalışır. \
+  `TeleopInit() ` Robotlar kumandayla kontrol periyoduna geçmeden önce bir kere çalışır. \
+  `TeleopPeriodic() ` Robot otonom kumandayla kontrol periyodundayken her 20 ms'de bir çalışır. \
+  `TestPeriodic()` Oyun sırasında çalışmaz, kod denemek içindir ve Driver Station'dan aktif edilirse her 20 ms'de bir çalışır. 
 
+  Bu methodlarla oluşturulan [örnek programı](https://wpilib.screenstepslive.com/s/currentCS/m/cpp/l/145319-creating-your-benchtop-test-program) linkte bulabilirsiniz.
 
+  Çoğu FRC oyununda otonom periyodu sırasında sürücülerin kumandayla müdahale etmesine izn verilmemektedir. Ancak 2019 yılı Deep Space oyununda bu kural kaldırılarak kamera sistemi kullanarak robot kontrolüne izin verilmiştir. Bu sebepten dolayı kodu yazarken hem otonom hem de kumandayla kontrol periyodu için ortak bir method olarak `Robot::Periodic`'i kullandık
 
+  ```cpp
+//Robot.cpp  
+void Robot::AutonomousPeriodic() {
+  Periodic();
+}
 
+void Robot::TeleopInit() {}
+
+void Robot::TeleopPeriodic() {
+  Periodic();
+}
+  ``` 
+
+  Yazının devamında sistemler üzerinden kodun tamamını inceleyeceğiz. Hangi dosyalardan alıntı olduğu [comment](https://www.cs.utah.edu/~germain/PPS/Topics/commenting.html) satırlarında yazacaktır.
 - # Sürüş sistemi
 Drive alternatifleri için linkler Differential Drive ayrıca wpilib documentation gömülü
 Neden Curvature drive
@@ -101,20 +122,43 @@ FRC oyunlarında hiç değişmeyen bir şey var ise bu da robotların saha düzl
 ```
 Kodu yazarken de buna uygun olarak `DifferentialDrive`  sınıfını kullandık. Sınıfın kullanımı için [burayı](https://wpilib.screenstepslive.com/s/currentCS/m/java/l/914148-driving-a-robot-using-differential-drive) ziyaret edebilirsiniz. Daha da detaylı açıklama için [WPIlib dokümentasyonunun ilgili sayfasına](https://first.wpi.edu/FRC/roborio/release/docs/cpp/classfrc_1_1DifferentialDrive.html) bakılabilir.
 
-Motor sürücü olarak Talon SR tercih ettik. Robot ani frenlerde düşebileceği için [coast](https://firstwiki.github.io/wiki/talon-sr#coastbrake) modunu tercih ettik. 
+Motor sürücü olarak Talon SR tercih ettik. Robot ani frenlerde düşebileceği için [coast](https://firstwiki.github.io/wiki/talon-sr#coastbrake) modunu ayarladık. 
 ```cpp
- //Robot.cpp > Robot::Periodic
- rd.CurvatureDrive(drive_js.GetRawAxis(1),drive_js.GetRawAxis(4)*0.75,drive_js.GetRawAxis(7)); 
+ //Robot.cpp > Robot::Periodic()
+ rd.CurvatureDrive(drive_js.GetRawAxis(1), drive_js.GetRawAxis(4)*0.75 ,drive_js.GetRawAxis(7)); 
 ```
-Yukarıdaki linklerde anlatıldığı üzere sürüş methodunun alternatifleri arasından [CurvatureDrive](https://first.wpi.edu/FRC/roborio/release/docs/cpp/classfrc_1_1DifferentialDrive.html#a7f6af2233e75b79f70faaac79c929e87)'ı seçtik.  Kullanımı linkte olan bu methodu seçmemizde yüksek hızlardaki kontrol kolaylığı ve quickturn butonu ile keskin dönüşler yapabilmesi öne çıktı.
+Yukarıdaki linklerde anlatıldığı üzere sürüş methodunun alternatifleri arasından [CurvatureDrive](https://first.wpi.edu/FRC/roborio/release/docs/cpp/classfrc_1_1DifferentialDrive.html#a7f6af2233e75b79f70faaac79c929e87)'ı seçtik.  Kullanımı linkte olan bu methodu seçmemizde yüksek hızlardaki kontrol kolaylığı ve quick turn butonu ile keskin dönüşler yapabilmesi öne çıktı.
 
-Ayrıca methoda girilen parametreler görüldüğü üzere kumandadan `Joystick` sınıfı kullanılarak veriliyor. Joystick kullanımı ile ilgili aşağıdaki linklerden faydalanılabilir.\
+Ayrıca methoda girilen parametreler görüldüğü üzere kumandadan `Joystick` sınıfı kullanılarak veriliyor. Joystick kullanımı ile ilgili aşağıdaki linklerden faydalanılabilir.
 [Driver Station hakkında](https://wpilib.screenstepslive.com/s/currentCS/m/24192?data-resolve-url=true&data-manual-id=24192) \
 [Drive Station girdileri](https://wpilib.screenstepslive.com/s/currentCS/m/cpp/l/241880-driver-station-input-overview) \
 [Joystickler](https://wpilib.screenstepslive.com/s/currentCS/m/cpp/l/241881-joysticks)
 
+Eğer Victor SPX veya Talon SRX ile yukarıdaki sınıfları kullanmak isterseniz hatayla karşılaşabilirsiniz. Bunun sebebi sonradan eklenen bu motor sürücü sınıflarının WPIlib'de var olan `SpeedController` sınıfından miras almamasıdır. Bu durumu çözmek için PWM'li motor sürücüler yukarıdaki gibi tanımlanıp methoda verilip, sonrasında bu motorun sürücülerin PWM sinyali drive motorlarına verilebilir. Örnek:
 
+```cpp
+  //class Robot:
+  frc::Spark drive_r; 
+  frc::Spark drive_l; 
 
+  VictorSPX m_frontRight{1};//CAN
+  VictorSPX m_rearRight{2};
+  VictorSPX m_frontLeft{3};
+  VictorSPX m_rearLeft{4};
+
+  frc::DifferentialDrive rd{drive_r,drive_l};
+```
+
+```cpp
+  //Robot::TeleopPeriodic() veya Robot::AutonomousPeriodic() :
+  rd.CurvatureDrive(drive_js.GetRawAxis(1),drive_js.GetRawAxis(4)*0.75,drive_js.GetRawButton(7));
+  
+  m_frontRight.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput,drive_r.Get());
+  m_rearLeft.Follow(m_frontLeft);
+  m_frontRight.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput,drive_l.Get());
+  m_rearLeft.Follow(m_frontLeft);
+
+```
 - # Asansör Sistemi
 ```cpp
 VictorSPX m_frontLift{0};//CAN 
