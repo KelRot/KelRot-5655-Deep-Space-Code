@@ -154,8 +154,8 @@ Eğer Victor SPX veya Talon SRX ile yukarıdaki sınıfları kullanmak isterseni
   rd.CurvatureDrive(drive_js.GetRawAxis(1),drive_js.GetRawAxis(4)*0.75,drive_js.GetRawButton(7));
   
   m_frontRight.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput,drive_r.Get());
-  m_rearLeft.Follow(m_frontLeft);
-  m_frontRight.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput,drive_l.Get());
+  m_rearRight.Follow(m_frontRight);
+  m_frontLeft.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput,drive_l.Get());
   m_rearLeft.Follow(m_frontLeft);
 
 ```
