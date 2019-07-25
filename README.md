@@ -27,7 +27,7 @@ Kelrot #5655 takımının [FRC](https://www.firstinspires.org/robotics/frc) 2019
  [Chief Delphi - FRC ile ilgili çoğu sorunuza cevap bulabileceğiniz forum](https://www.chiefdelphi.com) \
  [The Blue Alliance - Takımlar ve etkinlikler hakkında bilgi edinebileceğiniz internet sitesi](https://www.thebluealliance.com/) \
  [FRC resmi Discord grubu](https://discordapp.com/invite/frc) \
- [r/FRC(https://www.reddit.com/r/FRC/)
+ [r/FRC](https://www.reddit.com/r/FRC/)
 
 # Robot ve oyun hakkında
 Robot, FRC'de her sene olduğu gibi yaklaşık 2.5 dakikalık bir oyunu oynayacak ve içerisindeki görevleri tamamlayacak şekilde tasarlandı ve yapıldı. Kodlanan sistemlerin mantığını daha iyi kavramak için oyun hakkında bilgi sahibi olmanızı tavsiye ederiz. Eğer Deep Space temalı bir FRC etkinliğinde katılımcı iseniz [Game Manuel'i](https://firstfrc.blob.core.windows.net/frc2019/Manual/2019FRCGameSeasonManual.pdf) detaylı şekilde okumanız beklenir. \
