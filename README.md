@@ -6,7 +6,7 @@
 [Sistemler](#sistemler) 
 - [Sürüş Sistemi](#sürüş-sistemi) 
 - [Asansör Sistemi](#asansör-sistemi) 
-- [Intake Açılıp Kapanma Sistemi](#intake-açılıp-kapanmama-sistemi) 
+- [Intake Açılıp Kapanmama Sistemi](#intake-açılıp-kapanmama-sistemi) 
 - [Intake Cargo Alma Sistemi](#intake-cargo-alma-sistemi)
 - [Intake Hatch Asma Sistemi](#intake-hatch-asma-sistemi) 
 
