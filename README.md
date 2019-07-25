@@ -88,7 +88,7 @@ WPIlib'de robot projesi oluşturulduğu zaman verilen robot sınıfı oyunun far
   Çoğu FRC oyununda otonom periyodu sırasında sürücülerin kumandayla müdahale etmesine izin verilmemektedir. Ancak 2019 yılı Deep Space oyununda bu kural kaldırılarak kamera sistemi kullanarak robot kontrolüne izin verildi. Bu sebepten dolayı kodu yazarken hem otonom hem de kumandayla kontrol periyodu için ortak bir method olarak `Robot::Periodic`'i kullandık
 
 
-(Robot.cpp)
+(**Robot.cpp**)
   ```cpp
 void Robot::AutonomousPeriodic() {
   Periodic();
