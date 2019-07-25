@@ -74,22 +74,22 @@ Kurulumu yaparken biz bu linklerden yararlandık. Daha detaylı bilgiyi dokümen
 WPIlib'de robot projesi oluşturulduğu zaman verilen robot sınıfı oyunun farklı bölümlerine hitap eden bazı temel methodlar içerir. Bunlardan bazıları :
 
   `RobotInit()` RoboRIO kodu çalıştırır çalıştırmaz başlayan methoddur ve bir kere çalışır. \
-  `RobotPeriodic() ` RoboRIO kodu çalıştırdığı sürece her 20 ms'de bir çalışır. \
+  `RobotPeriodic() ` RoboRIO kodu çalıştırdığı sürece döngü halinde çalışır\
   `AutonomousInit() ` Robotun oyunun başlangıcındaki otonom bölümü için hazırlanması için bir kere çalışır. \
-  `AutonomousPeriodic() ` Robot otonom bölümündeyken her 20 ms'de bir çalışır. \
+  `AutonomousPeriodic() ` Robot otonom bölümündeyken döngü halinde çalışır\
   `TeleopInit() ` Robotlar kumandayla kontrol periyoduna geçmeden önce bir kere çalışır. \
-  `TeleopPeriodic() ` Robot otonom kumandayla kontrol periyodundayken her 20 ms'de bir çalışır. \
-  `TestPeriodic()` Oyun sırasında çalışmaz, kod denemek içindir ve Driver Station'dan aktif edilirse her 20 ms'de bir çalışır. \
+  `TeleopPeriodic() ` Robot otonom kumandayla kontrol periyodundayken döngü halinde çalışır\
+  `TestPeriodic()` Oyun sırasında çalışmaz, kod denemek içindir ve Driver Station'dan aktif edilirse döngü halinde çalışır\
   `DisableInıt()` Oyun bitiminde veya Driver Station tarafından robot disabled hale getirildiğinde bir kere çalışır. \
-  `DisablePeriodic()` Robot disabled haldeyken her her 20 ms'de bir çalışır. 
+  `DisablePeriodic()` Robot disabled haldeyken döngü halinde çalışır.
+  > Not: Her döngü Driver Station haberleşmesi ve kullanılan robot sınıfına bağlı olarak ~20 ms'de bir çalışır.
 
   Bu methodlarla oluşturulan [örnek programı](https://wpilib.screenstepslive.com/s/currentCS/m/cpp/l/145319-creating-your-benchtop-test-program) linkte bulabilirsiniz.
 
-  Çoğu FRC oyununda otonom periyodu sırasında sürücülerin kumandayla müdahale etmesine izin verilmemektedir. Ancak 2019 yılı Deep Space oyununda bu kural kaldırılarak kamera sistemi kullanarak robot kontrolüne izin verildi. Bu sebepten dolayı kodu yazarken hem otonom hem de kumandayla kontrol periyodu için ortak bir method olarak `Robot::Periodic`'i kullandık.
+  Çoğu FRC oyununda otonom periyodu sırasında sürücülerin kumandayla müdahale etmesine izin verilmemektedir. Ancak 2019 yılı Deep Space oyununda bu kural kaldırılarak kamera sistemi kullanarak robot kontrolüne izin verildi. Bu sebepten dolayı kodu yazarken hem otonom hem de kumandayla kontrol periyodu için ortak bir method olarak `Robot::Periodic`'i kullandık
 
-
-(**Robot.cpp**)
   ```cpp
+//Robot.cpp  
 void Robot::AutonomousPeriodic() {
   Periodic();
 }
