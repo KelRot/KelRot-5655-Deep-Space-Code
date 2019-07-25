@@ -71,7 +71,7 @@ Kurulumu yaparken biz bu linklerden yararlandık. Daha detaylı bilgiyi dokümen
  
  Ek olarak PWM ve CAN hakkında bilgi almak için [buradan](https://alex-spataru.gitbooks.io/frc-robot-programming/content/Book/Chapters/1.3.html) hala hazırlanmakta olan bir FRC Programlama rehberinin ilgili bölümünü inceleyebilirsiniz.
 # Sistemler
-WPIlib'de robot projesi oluşturulduğu zaman verilen robot sınıfı oyunun farklı bölümlerine hitap eden bazı temel methodlar içerir. Bunlardan bazıları(çalışma sırasıyla) :
+WPIlib'de robot projesi oluşturulduğu zaman verilen robot sınıfı oyunun farklı bölümlerine hitap eden bazı temel methodlar içerir. Bunlardan bazıları :
 
   `RobotInit()` RoboRIO kodu çalıştırır çalıştırmaz başlayan methoddur ve bir kere çalışır. \
   `RobotPeriodic() ` RoboRIO kodu çalıştırdığı sürece her 20 ms'de bir çalışır. \
@@ -79,11 +79,13 @@ WPIlib'de robot projesi oluşturulduğu zaman verilen robot sınıfı oyunun far
   `AutonomousPeriodic() ` Robot otonom bölümündeyken her 20 ms'de bir çalışır. \
   `TeleopInit() ` Robotlar kumandayla kontrol periyoduna geçmeden önce bir kere çalışır. \
   `TeleopPeriodic() ` Robot otonom kumandayla kontrol periyodundayken her 20 ms'de bir çalışır. \
-  `TestPeriodic()` Oyun sırasında çalışmaz, kod denemek içindir ve Driver Station'dan aktif edilirse her 20 ms'de bir çalışır. 
+  `TestPeriodic()` Oyun sırasında çalışmaz, kod denemek içindir ve Driver Station'dan aktif edilirse her 20 ms'de bir çalışır. \
+  `DisableInıt()` Oyun bitiminde veya Driver Station tarafından robot disabled hale getirildiğinde bir kere çalışır. \
+  `DisablePeriodic()` Robot disabled haldeyken her her 20 ms'de bir çalışır. 
 
   Bu methodlarla oluşturulan [örnek programı](https://wpilib.screenstepslive.com/s/currentCS/m/cpp/l/145319-creating-your-benchtop-test-program) linkte bulabilirsiniz.
 
-  Çoğu FRC oyununda otonom periyodu sırasında sürücülerin kumandayla müdahale etmesine izn verilmemektedir. Ancak 2019 yılı Deep Space oyununda bu kural kaldırılarak kamera sistemi kullanarak robot kontrolüne izin verilmiştir. Bu sebepten dolayı kodu yazarken hem otonom hem de kumandayla kontrol periyodu için ortak bir method olarak `Robot::Periodic`'i kullandık
+  Çoğu FRC oyununda otonom periyodu sırasında sürücülerin kumandayla müdahale etmesine izin verilmemektedir. Ancak 2019 yılı Deep Space oyununda bu kural kaldırılarak kamera sistemi kullanarak robot kontrolüne izin verildi. Bu sebepten dolayı kodu yazarken hem otonom hem de kumandayla kontrol periyodu için ortak bir method olarak `Robot::Periodic`'i kullandık
 
   ```cpp
 //Robot.cpp  
@@ -98,7 +100,12 @@ void Robot::TeleopPeriodic() {
 }
   ``` 
 
-  Yazının devamında sistemler üzerinden kodun tamamını inceleyeceğiz. Hangi dosyalardan alıntı olduğu [comment](https://www.cs.utah.edu/~germain/PPS/Topics/commenting.html) satırlarında yazacaktır.
+  Yazının devamında robottaki sistemler üzerinden kodun tamamını incelenecektir. Hangi dosyalardan alıntı olduğu [comment](https://www.cs.utah.edu/~germain/PPS/Topics/commenting.html) satırlarında yazacaktır.
+  ```cpp
+  //Robot.h
+  <Robot.h'de yer alan kodlar>
+  ```
+
 - # Sürüş sistemi
 Drive alternatifleri için linkler Differential Drive ayrıca wpilib documentation gömülü
 Neden Curvature drive
@@ -161,6 +168,7 @@ Eğer Victor SPX veya Talon SRX ile yukarıdaki sınıfları kullanmak isterseni
 ```
 - # Asansör Sistemi
 ```cpp
+//Robot.h
 VictorSPX m_frontLift{0};//CAN 
 VictorSPX m_rearLift{1};
 
@@ -176,6 +184,7 @@ void setLiftforHatchAndCargo();
 void manualLiftControl();
 ```
 ```cpp
+//Robot.cpp
 void Robot::manualLiftControl()
 {
   if(js.GetRawButton(3))//*up
@@ -220,6 +229,7 @@ float Robot::getLiftHeight(){
 }
 ```
 ```cpp
+  //Robot.cpp > Robot::Periodic
   float error = ref-getLiftHeight();
   pdc.setError(error);
   float output = pdc.getOutput();
@@ -238,14 +248,17 @@ float Robot::getLiftHeight(){
   std::cout<<"error="<<error<<std::endl;
 ```
 PD kontrol,tuning vs PD kontrol için ayrı repo?
+
 - # Intake Açılıp Kapanmama Sistemi
 Burası çokomelli
 
 ```cpp
+//Robot.h
 void extension();
 frc::DoubleSolenoid intakeLowering{2,3};
 ```
 ```cpp
+//Robot.cpp
 void Robot::extension(){
   if(js.GetRawButton(1)){
     intakeLowering.Set(frc::DoubleSolenoid::Value::kReverse);
@@ -258,33 +271,36 @@ void Robot::extension(){
   }
 }
 ```
+//RrRrr.hHç
 - # Intake Cargo Alma Sistemi
 
 ```cpp
+  //Robot.h
   void intake();
   
   frc::Victor m_leftIntake{0};//PWM
   frc::Victor m_rightIntake{1};
 ```
 ```cpp
-void Robot::intake()
-{
-  if(js.GetPOV()==180)
+  //Robot.cpp
+  void Robot::intake()
   {
-    m_rightIntake.Set(-1.0);
-    m_leftIntake.Set(1.0);
+    if(js.GetPOV()==180)
+    {
+      m_rightIntake.Set(-1.0);
+      m_leftIntake.Set(1.0);
+    }
+    else if(js.GetPOV()==0)
+    {
+      m_rightIntake.Set(1.0);
+      m_leftIntake.Set(-1.0);
+    } 
+    else
+    {
+      m_rightIntake.Set(0.0);
+      m_leftIntake.Set(0.0);
+    } 
   }
-  else if(js.GetPOV()==0)
-  {
-    m_rightIntake.Set(1.0);
-    m_leftIntake.Set(-1.0);
-  } 
-  else
-  {
-   m_rightIntake.Set(0.0);
-   m_leftIntake.Set(0.0);
-  } 
-}
 ```
 
 Düz motor çalıştırma
