@@ -7,11 +7,11 @@
 - [Sürüş Sistemi](#sürüş-sistemi) 
 - [Asansör Sistemi](#asansör-sistemi) 
 - [Intake Açılıp Kapanmama Sistemi](#intake-açılıp-kapanmama-sistemi) 
-- [Intake Cargo Alma Sistemi](#intake-cargo-alma-sistemi)
+- [Intake Cargo Alma ve Atma Sistemi](#intake-cargo-alma-ve-atma-sistemi)
 - [Intake Hatch Asma Sistemi](#intake-hatch-asma-sistemi) 
 
 [Ekstra Kontrol Sistemleri](#ekstra-kontrol-sistemleri) \
-[Kapanış ve Teşekkür](#kapanış-ve-teşekkür) 
+[Son notlar](#son-notlar) 
 
 Kelrot #5655 takımının [FRC](https://www.firstinspires.org/robotics/frc) 2019 Deep Space yarışması için hazırladığı robotun kodlarıdır.FIRST tarafından önerildiği üzere Visual Studio Code IDE'si ile birlikte WPIlib eklentisi kullanılarak ve C++ dili tercih edilerek yazıldı. Geliştirme ekosistemin kurulumu hakkında detaylı bilgi [burada](https://wpilib.screenstepslive.com/s/currentCS/m/cpp/c/57252) bulunabilir.
  Ek olarak C++ kullanılarak robot kodu hazırlama ile ilgili  detaylı bilgi [FRC C++ Programming](https://wpilib.screenstepslive.com/s/currentCS/m/cpp) sayfasında bulunabilir.
@@ -100,17 +100,7 @@ void Robot::TeleopPeriodic() {
   Periodic();
 }
   ``` 
-
-  Yazının devamında robottaki sistemler üzerinden kodun tamamını incelenecektir. Hangi dosyalardan alıntı olduğu [comment](https://www.cs.utah.edu/~germain/PPS/Topics/commenting.html) satırlarında yazacaktır.
-  ```cpp
-  //Robot.h
-  <Robot.h'de yer alan kodlar>
-  ```
-
-- # Sürüş sistemi
-Drive alternatifleri için linkler Differential Drive ayrıca wpilib documentation gömülü
-Neden Curvature drive
-spx ile motor sürme
+- ## Sürüş sistemi
 
 FRC oyunlarında hiç değişmeyen bir şey var ise bu da robotların saha düzleminde hareket etmeleridir. Bu hareketi sağlamak için [Kit of Parts](https://www.firstinspires.org/robotics/frc/kit-of-parts) kapsamında olan [AM14U4](https://www.andymark.com/products/am14u4-kit-of-parts-chassis?via=Z2lkOi8vYW5keW1hcmsvV29ya2FyZWE6OkNhdGFsb2c6OkNhdGVnb3J5LzVhZjhkN2Y1YmM2ZjZkNWUzNmYyMzRkOA) kodlu drive base'i kullandık. 
  Yani Differential Drive sınıfına giren bir sürüş sistemine sahip olduk. [Sürüş sistemleri](https://wpilib.screenstepslive.com/s/currentCS/m/java/l/914814-wpilib-drive-classes-drivetrain-types) ile ilgili detaylı bilgiyi linkte bulabilirsiniz. 
@@ -119,10 +109,10 @@ FRC oyunlarında hiç değişmeyen bir şey var ise bu da robotların saha düzl
   //Robot.h
   frc::Joystick drive_js{0};
 
-  frc::Talon m_frontRight{2}; //PWM
-  frc::Talon m_rearRight{3};
-  frc::Talon m_frontLeft{4};
-  frc::Talon m_rearLeft{4};
+  frc::Talon frontRight{2}; //PWM
+  frc::Talon rearRight{3};
+  frc::Talon frontLeft{4};
+  frc::Talon rearLeft{4};
   
   frc::SpeedControllerGroup driveMotors_right{m_frontRight,m_rearRight}; 
   frc::SpeedControllerGroup driveMotors_left{m_frontLeft,m_rearLeft};
@@ -130,7 +120,7 @@ FRC oyunlarında hiç değişmeyen bir şey var ise bu da robotların saha düzl
 ```
 Kodu yazarken de buna uygun olarak `DifferentialDrive`  sınıfını kullandık. Sınıfın kullanımı için [burayı](https://wpilib.screenstepslive.com/s/currentCS/m/java/l/914148-driving-a-robot-using-differential-drive) ziyaret edebilirsiniz. Daha da detaylı açıklama için [WPIlib dokümentasyonunun ilgili sayfasına](https://first.wpi.edu/FRC/roborio/release/docs/cpp/classfrc_1_1DifferentialDrive.html) bakılabilir.
 
-Motor sürücü olarak Talon SR tercih ettik. Robot ani frenlerde düşebileceği için [coast](https://firstwiki.github.io/wiki/talon-sr#coastbrake) modunu ayarladık. 
+Motor sürücü olarak Talon SR tercih ettik. Robot ani frenlerde devrilebileceği için [coast](https://firstwiki.github.io/wiki/talon-sr#coastbrake) modunu ayarladık. 
 ```cpp
  //Robot.cpp > Robot::Periodic()
  rd.CurvatureDrive(drive_js.GetRawAxis(1), drive_js.GetRawAxis(4)*0.75 ,drive_js.GetRawAxis(7)); 
@@ -149,10 +139,10 @@ Eğer Victor SPX veya Talon SRX ile yukarıdaki sınıfları kullanmak isterseni
   frc::Spark drive_r; 
   frc::Spark drive_l; 
 
-  VictorSPX m_frontRight{1};//CAN
-  VictorSPX m_rearRight{2};
-  VictorSPX m_frontLeft{3};
-  VictorSPX m_rearLeft{4};
+  VictorSPX frontRight{1};//CAN
+  VictorSPX rearRight{2};
+  VictorSPX frontLeft{3};
+  VictorSPX rearLeft{4};
 
   frc::DifferentialDrive rd{drive_r,drive_l};
 ```
@@ -161,19 +151,21 @@ Eğer Victor SPX veya Talon SRX ile yukarıdaki sınıfları kullanmak isterseni
   //Robot::TeleopPeriodic() veya Robot::AutonomousPeriodic() :
   rd.CurvatureDrive(drive_js.GetRawAxis(1),drive_js.GetRawAxis(4)*0.75,drive_js.GetRawButton(7));
   
-  m_frontRight.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput,drive_r.Get());
-  m_rearRight.Follow(m_frontRight);
-  m_frontLeft.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput,drive_l.Get());
-  m_rearLeft.Follow(m_frontLeft);
+  frontRight.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput,drive_r.Get());
+  rearRight.Follow(m_frontRight);
+  frontLeft.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput,drive_l.Get());
+  rearLeft.Follow(m_frontLeft);
 
 ```
-- # Asansör Sistemi
+- ## Asansör Sistemi
+
+
 ```cpp
 //Robot.h
-VictorSPX m_frontLift{0};//CAN 
-VictorSPX m_rearLift{1};
+VictorSPX frontLift{0};//CAN 
+VictorSPX rearLift{1};
 
-frc::Encoder lift_ec{0,1};
+frc::Encoder lift_ec{0,1}; // DI/O
 
 PDController pdc;
 int ref;
@@ -230,7 +222,27 @@ float Robot::getLiftHeight(){
 }
 ```
 ```cpp
+  //Robot.cpp
+  void Robot::AutonomousInit() {
+  baseSpeed = 1;
+  kp=0.008;
+  kd=0.075;
+  pdc.setkP(kp);
+  pdc.setkD(kd);
+  ref = 0;
+
+  frontLift.Set(ControlMode::PercentOutput,0);
+  rearLift.Set(ControlMode::PercentOutput,0);
+  lift_ec.Reset();
+  
+  //runPControl = false;
+}
+```
+```cpp
   //Robot.cpp > Robot::Periodic
+  manualLiftControl();
+  setLiftforHatchAndCargo();
+
   float error = ref-getLiftHeight();
   pdc.setError(error);
   float output = pdc.getOutput();
@@ -242,22 +254,23 @@ float Robot::getLiftHeight(){
     baseSpeed = -1;
   } 
   double speed = baseSpeed;
-  m_frontLift.Set(ControlMode::PercentOutput,speed);
-  m_rearLift.Set(ControlMode::PercentOutput,speed);
+  frontLift.Set(ControlMode::PercentOutput,speed);
+  rearLift.Set(ControlMode::PercentOutput,speed);
 
   std::cout<<"lift height="<<getLiftHeight()<<std::endl;
   std::cout<<"error="<<error<<std::endl;
 ```
 PD kontrol,tuning vs PD kontrol için ayrı repo?
 
-- # Intake Açılıp Kapanmama Sistemi
-Burası çokomelli
+- ## Intake Açılıp Kapanmama Sistemi
+Oyun manuelinde belirtildiği üzere robotlar maça başlamadan önce herhangi bir parçası frame perimeter dışında kalamaz. Ancak intake sisteminin ise çalışma mantığı gereği dışarıda olması gerekiyordu. Buna çözüm olarak iki adet piston maç başlamadan önce intake'i içeride tutuyor ve maç başladıktan sonra sürücü kontrolü ile açılıyor. 
 
 ```cpp
 //Robot.h
 void extension();
-frc::DoubleSolenoid intakeLowering{2,3};
+frc::DoubleSolenoid intakeLowering{2,3}; //PCM channels
 ```
+İki pistonu kontrol etmek için PCM'e bağlı bir adet [Double Solenoid](https://www.andymark.com/products/double-solenoid-valve-mead-1-8-npt) yeterli oldu. Robot sınıfının içinde operasyonu gerçekleştirmek için bir de `extension()` methodunu ekledik.
 ```cpp
 //Robot.cpp
 void Robot::extension(){
@@ -272,45 +285,55 @@ void Robot::extension(){
   }
 }
 ```
-//RrRrr.hHç
-- # Intake Cargo Alma Sistemi
+Method Joystick inputlarını denetleyip `DoubleSolenoid` sınıfının methodları ile pistonları kontrol ediyor. Pnömatik sistemleri ve kod kullanımları ile ilgili aşağıdaki linklerden bilgi alabilirsiniz.
 
+[Pnömatik manueli-pdf](https://firstfrc.blob.core.windows.net/frc2017/pneumatics-manual.pdf) \
+[Kompresör sınıfı ile ilgili bilgi](https://wpilib.screenstepslive.com/s/currentCS/m/cpp/l/241865-operating-a-compressor-for-pneumatics) \
+[Solenoid sınıfları ile ilgili bilgi](https://wpilib.screenstepslive.com/s/currentCS/m/cpp/l/241866-operating-pneumatic-cylinders-solenoids) \
+[DoubleSolenoid için dokümentaston](https://first.wpi.edu/FRC/roborio/release/docs/cpp/classfrc_1_1DoubleSolenoid.html)
+- ## Intake Cargo Alma ve Atma Sistemi
+[robot fotoğrafı hoş olur]
+Kargo alma sistemi için 2 adet [RS775Pro](http://www.wcproducts.net/217-4347) ve onların çevirdiği sağda ve solda üçer tane toplam 6 adet [compilant wheel](https://www.andymark.com/products/4-in-compliant-wheel-8mm-bore-35a-durometer?via=Z2lkOi8vYW5keW1hcmsvV29ya2FyZWE6Ok5hdmlnYXRpb246OlNlYXJjaFJlc3VsdHMvJTdCJTIyYnV0dG9uJTIyJTNBJTIyc2VhcmNoJTIyJTJDJTIycSUyMiUzQSUyMmNvbXBsaWFudCt3aGVlbCUyMiUyQyUyMnV0ZjglMjIlM0ElMjIlRTIlOUMlOTMlMjIlN0Q) kullandık. 
 ```cpp
   //Robot.h
   void intake();
   
-  frc::Victor m_leftIntake{0};//PWM
-  frc::Victor m_rightIntake{1};
+  frc::VictorSP leftIntake{0};//PWM
+  frc::VictorSP rightIntake{1};
 ```
+Motorları iki adet VictorSP kontrol ediyor. İşlemi gerçekleştirmek için `intake()` methodunu Robot sınıfına dahil ettik.
 ```cpp
   //Robot.cpp
   void Robot::intake()
   {
     if(js.GetPOV()==180)
     {
-      m_rightIntake.Set(-1.0);
-      m_leftIntake.Set(1.0);
+      rightIntake.Set(-1.0);
+      leftIntake.Set(1.0);
     }
     else if(js.GetPOV()==0)
     {
-      m_rightIntake.Set(1.0);
-      m_leftIntake.Set(-1.0);
+      rightIntake.Set(1.0);
+      leftIntake.Set(-1.0);
     } 
     else
     {
-      m_rightIntake.Set(0.0);
-      m_leftIntake.Set(0.0);
+      rightIntake.Set(0.0);
+      leftIntake.Set(0.0);
     } 
   }
 ```
+Method 2 adet Joystick butonundan gelen inputları kontrol ediyor ve butona göre motorları dışa veya içe doğru çeviriyor. Bu şekilde cargo alıp atabiliyor. Bunları yaparken Victor motor sürücü sınıfının `Set()` methodunu kullanarak PWM sinyalleri ile motor sürücü ile haberleşiliyor. Motor sürücülerin kontrolü için aşağıdaki linklerden yararlanabilirsiniz. 
 
-Düz motor çalıştırma
-- # Intake Hatch Asma Sistemi
-
+[PWM kullanan motor sürücüleri ile motor sürme hakkında bilgi](https://wpilib.screenstepslive.com/s/currentCS/m/cpp/l/241859-driving-motors-with-pwm-speed-controller-objects) \
+[Motor sürücülerin dokümentasyonu (örnek olarak VictorSP)](https://first.wpi.edu/FRC/roborio/release/docs/cpp/classfrc_1_1VictorSP.html)
+- ## Intake Hatch Asma Sistemi
+Hatch alırken intake'in üst kısmında bulunan velcrolardan yararlandık. Daha sonra yapışan hatchleri rocket ve cargo ship'e asarken ise 1 adet piston kullandık.
 ```cpp
 void hatchStuff();
-frc::DoubleSolenoid hatchThrow{6,7}; 
+frc::DoubleSolenoid hatchThrow{6,7}; //PCM channels
 ```
+Yine operasyon için kullandığımız `hatchStuff()` methodunu ve piston kontrolü için `DoubleSolenoid` objesini robot sınıfına dahil ettik.
 ```cpp
 void Robot::hatchStuff()
 {
@@ -328,9 +351,9 @@ void Robot::hatchStuff()
   }
 }
 ```
-Düz piston çalıştırma
+Method joystick butonlarına göre pistonu ileri veya geri hareket ettiriyor. Böylece pistonu ileri pozisyona alıp hatch'i asabiliyoruz. Astıktan sonra ise içeri alıp bir sonraki hedefe hazır hale getiriyoruz.
 # Ekstra Kontrol Sistemleri
 Joystick hazırlama - esadın repoya link ver. \
 Otonom çalışması ve fikri.
 
-# Kapanış ve Teşekkür
+# Son notlar
