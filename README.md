@@ -109,10 +109,10 @@ FRC oyunlarında hiç değişmeyen bir şey var ise bu da robotların saha düzl
   //Robot.h
   frc::Joystick drive_js{0};
 
-  frc::Talon frontRight{2}; //PWM
-  frc::Talon rearRight{3};
-  frc::Talon frontLeft{4};
-  frc::Talon rearLeft{4};
+  frc::Talon m_frontRight{2}; //PWM
+  frc::Talon m_rearRight{3};
+  frc::Talon m_frontLeft{4};
+  frc::Talon m_rearLeft{4};
   
   frc::SpeedControllerGroup driveMotors_right{m_frontRight,m_rearRight}; 
   frc::SpeedControllerGroup driveMotors_left{m_frontLeft,m_rearLeft};
