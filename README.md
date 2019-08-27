@@ -1,18 +1,6 @@
 # Kaynaklar ve genel linkler
 
-[Robot ve oyun hakkında](#robot-ve-oyun-hakkında) \
-[Elektronik sistem](#elektronik-sistem) \
-[Robot ve oyun hakkında](#robot-ve-oyun-hakkında) \
-[Sistemler](#sistemler) 
-- [Sürüş Sistemi](#sürüş-sistemi) 
-- [Asansör Sistemi](#asansör-sistemi) 
-- [Intake Açılıp Kapanmama Sistemi](#intake-açılıp-kapanmama-sistemi) 
-- [Intake Cargo Alma ve Atma Sistemi](#intake-cargo-alma-ve-atma-sistemi)
-- [Intake Hatch Asma Sistemi](#intake-hatch-asma-sistemi) 
-
-[Ekstra Kontrol Sistemleri](#ekstra-kontrol-sistemleri) <br/>
-[Son notlar](#son-notlar) 
-
+[Wiki🔗](https://github.com/exeokan/KelRot-5655-Deep-Space-Code/wiki) \
 Kelrot #5655 takımının [FRC](https://www.firstinspires.org/robotics/frc) 2019 Deep Space yarışması için hazırladığı robotun kodlarıdır.FIRST tarafından önerildiği üzere Visual Studio Code IDE'si ile birlikte WPIlib eklentisi kullanılarak ve C++ dili tercih edilerek yazıldı. Geliştirme ekosistemin kurulumu hakkında detaylı bilgi [burada](https://wpilib.screenstepslive.com/s/currentCS/m/cpp/c/57252) bulunabilir.
  Ek olarak C++ kullanılarak robot kodu hazırlama ile ilgili  detaylı bilgi [FRC C++ Programming](https://wpilib.screenstepslive.com/s/currentCS/m/cpp) sayfasında bulunabilir.
 
@@ -37,4 +25,3 @@ Robot, FRC'de her sene olduğu gibi yaklaşık 2.5 dakikalık bir oyunu oynayaca
 Kısa şekilde anlatmak gerekirse robotun [Cascade](https://www.instructables.com/id/Introduction-to-Manipulators/)???düzeltme pls  tipinde bir asansör ile taşınan ve cargo ile hatch taşıyıp yerleştiren bir intake sistemine sahip olacak şekilde yapılmasına takımca karar verildi. Oyunun sonundaki tırmanma görevine hitaben ise bir sistem yapılmadı.
 
 ! Robot renderı hoş olur.
-
