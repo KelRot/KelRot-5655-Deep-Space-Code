@@ -1,0 +1,9 @@
+[
+  {
+    "artifact": "frcCpp (in project Ana Kod-2019)",
+    "target": "roborio",
+    "component": "frcUserProgram",
+    "debugfile": "frcCpp_roborio.debugconfig",
+    "language": "cpp"
+  }
+]

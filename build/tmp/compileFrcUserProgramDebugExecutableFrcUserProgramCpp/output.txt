@@ -1,0 +1,8 @@
+See file:///C:/Users/egeok/Desktop/Robot%20Works%202019/Ana%20Kod-2019/build/tmp/compileFrcUserProgramDebugExecutableFrcUserProgramCpp/output.txt for all output for compileFrcUserProgramDebugExecutableFrcUserProgramCpp.
+compiling Robot.cpp failed.
+C:\Users\egeok\Desktop\Robot Works 2019\Ana Kod-2019\src\main\cpp\Robot.cpp: In member function 'void Robot::intake()':
+C:\Users\egeok\Desktop\Robot Works 2019\Ana Kod-2019\src\main\cpp\Robot.cpp:40:5: error: 'class frc::Victor' has no member named 'intakeSol'
+     intakeSol.Set(1);
+     ^~~~~~~~~
+
+Finished compileFrcUserProgramDebugExecutableFrcUserProgramCpp, see full log file:///C:/Users/egeok/Desktop/Robot%20Works%202019/Ana%20Kod-2019/build/tmp/compileFrcUserProgramDebugExecutableFrcUserProgramCpp/output.txt.
