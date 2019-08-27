@@ -1,4 +1,3 @@
-<hr>
 # Kaynaklar ve genel linkler
 
 [Robot ve oyun hakkında](#robot-ve-oyun-hakkında) \
@@ -11,10 +10,9 @@
 - [Intake Cargo Alma ve Atma Sistemi](#intake-cargo-alma-ve-atma-sistemi)
 - [Intake Hatch Asma Sistemi](#intake-hatch-asma-sistemi) 
 
-[Ekstra Kontrol Sistemleri](#ekstra-kontrol-sistemleri) \
+[Ekstra Kontrol Sistemleri](#ekstra-kontrol-sistemleri) <br/>
 [Son notlar](#son-notlar) 
 
- <a target="blank" href="http://www.google.com">google</a>
 Kelrot #5655 takımının [FRC](https://www.firstinspires.org/robotics/frc) 2019 Deep Space yarışması için hazırladığı robotun kodlarıdır.FIRST tarafından önerildiği üzere Visual Studio Code IDE'si ile birlikte WPIlib eklentisi kullanılarak ve C++ dili tercih edilerek yazıldı. Geliştirme ekosistemin kurulumu hakkında detaylı bilgi [burada](https://wpilib.screenstepslive.com/s/currentCS/m/cpp/c/57252) bulunabilir.
  Ek olarak C++ kullanılarak robot kodu hazırlama ile ilgili  detaylı bilgi [FRC C++ Programming](https://wpilib.screenstepslive.com/s/currentCS/m/cpp) sayfasında bulunabilir.
 
