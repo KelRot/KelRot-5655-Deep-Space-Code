@@ -1,3 +1,4 @@
+<hr>
 # Kaynaklar ve genel linkler
 
 [Robot ve oyun hakkında](#robot-ve-oyun-hakkında) \
